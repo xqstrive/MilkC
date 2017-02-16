@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE milk SYSTEM "milk_1_0.dtd">
+
+<milk>
+    <static-path></static-path>
+    <encoding>UTF-8</encoding>
+    <initial-capacity>16</initial-capacity>
+    <load-factor>0.75f</load-factor>
+
+    <app>
+        <app-name>/sign</app-name>
+        <urls>
+            <url>
+                <url-name>/test1</url-name>
+                <url-service></url-service>
+                <url-template>\template\sign.jsp</url-template>
+            </url>
+            <url>
+                <url-name>/test1</url-name>
+                <url-service></url-service>
+                <url-template>\template\test1.html</url-template>
+            </url>
+
+        </urls>
+    </app>
+
+    <app>
+        <app-name>/found</app-name>
+        <urls>
+            <url>
+                <url-name>/</url-name>
+                <url-service>app.ServiceHelloWorld</url-service>
+                <url-template>\template\test1.html</url-template>
+            </url>
+            <url>
+                <url-name>/test1</url-name>
+                <url-service></url-service>
+                <url-template>\template\sign.jsp</url-template>
+            </url>
+            <url>
+                <url-name>/test1</url-name>
+                <url-service></url-service>
+                <url-template>\template\test1.html</url-template>
+            </url>
+
+        </urls>
+    </app>
+
+
+</milk>

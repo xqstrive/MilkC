@@ -1,0 +1,32 @@
+<!--
+ This file is for Milk framework, https://github.com/xqstrive/Milk.
+ You can use xml configure you project, but now the property is used.
+ Author Wangqi xqstrive@gmail.com
+ Created in 2017/2/15
+ Last modified in 2017/2/15
+-->
+
+<!ELEMENT milk (static-path?, encoding?, initial-capacity?, load-factor?,app*)>
+
+    <!ELEMENT static-path (#PCDATA)>
+
+    <!ELEMENT encoding (#PCDATA)>
+
+    <!ELEMENT initial-capacity (#PCDATA)>
+
+    <!ELEMENT load-factor (#PCDATA)>
+
+    <!ELEMENT app (app-name,urls)>
+
+        <!ELEMENT app-name (#PCDATA)>
+
+        <!ELEMENT urls (url+)>
+
+            <!ELEMENT url (url-name,url-service?,url-template?)>
+
+                <!ELEMENT url-name (#PCDATA)>
+
+                <!ELEMENT url-service (#PCDATA)>
+
+                <!ELEMENT url-template (#PCDATA)>
+
