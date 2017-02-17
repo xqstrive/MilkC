@@ -52,6 +52,8 @@ public class ServiceHelloWorld  implements ModuleService {
 ```
 访问localhost:8080/test/helloworld即可。
 
+这里需要注意的是，无论是app和是url（service）的注册都是按照顺序匹配，一旦匹配成功不会继续查找。
+
 ## 配置文件说明
 ```xml
 <?xml version="1.0" encoding="utf-8" ?>
