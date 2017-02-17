@@ -1,7 +1,6 @@
 package app;
 
 import me.xqstrive.milk.module.ModuleService;
-import me.xqstrive.milk.resourse.Properties;
 
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
@@ -15,11 +14,10 @@ public class ServiceHelloWorld  implements ModuleService {
     }
 
     public void service(ServletRequest servletRequest, ServletResponse servletResponse) {
-        System.out.println("Service:Hello World!");
         try {
-            servletResponse.getWriter().write("helloword");
+            servletResponse.getWriter().write("Hello World!");
         }catch (IOException e){
-            Properties.getLog().erro(e.getMessage());
+            System.out.print(e.getMessage());
         }
 
     }

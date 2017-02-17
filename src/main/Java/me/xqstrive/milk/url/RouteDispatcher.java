@@ -3,8 +3,8 @@ package me.xqstrive.milk.url;
 import me.xqstrive.milk.error.ErrorFactory;
 import me.xqstrive.milk.error.ErrorHandle;
 import me.xqstrive.milk.resourse.Properties;
-import org.w3c.dom.*;
 
+import org.w3c.dom.*;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.xml.parsers.DocumentBuilder;
@@ -26,12 +26,6 @@ public class RouteDispatcher {
      */
     public void init(){
         //配置文件加载
-        //code 待续，以下仅供测试使用。
-
-        String appName = "/index";
-        AppURLs appURLs = new AppContre(appName);
-        appURLs.registerURLs("/\\d",null,"\\template\\index.jsp");
-        appMap.put(appName,appURLs);
         loadXmlConfig();
     }
 
@@ -47,18 +41,22 @@ public class RouteDispatcher {
         }
         AppURLs appURLs = appMap.lookingAt(servletPath);
         if (appURLs!=null){
-            try {
-                String url = servletPath.substring(appURLs.getAppName().length());
-                appURLs.serviceURL(url,servletRequest,servletResponse);
-            }catch (StringIndexOutOfBoundsException e){
-                Properties.getLog().erro(e.getMessage()+"\n\t"+appURLs.getAppName()+"can not be Regular expressions");
+            String url;
+            if (appURLs.getAppName().equals("/")){
+                url = servletPath;
             }
-            return;
+            else if (appURLs.getAppName().length()<=servletPath.length()){
+                url = servletPath.substring(appURLs.getAppName().length());
+            }else {
+                url = null;
+            }
+            appURLs.serviceURL(url,servletRequest,servletResponse);
+        }else {
+            //这里应该有一个404的处理
+            ErrorHandle errorHandle = ErrorFactory.getErrorHandle("404");
+            errorHandle.handle(servletRequest,servletResponse);
         }
-        //这里应该有一个404的处理
-        ErrorHandle errorHandle = ErrorFactory.getErrorHandle("404");
-        errorHandle.handle(servletRequest,servletResponse);
-        return;
+
 
     }
 

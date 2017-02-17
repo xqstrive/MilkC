@@ -20,7 +20,7 @@ import java.io.*;
  */
 public class AppContre implements AppURLs {
     private String appName;
-    private UrlMap <String> serviceMap = new UrlMap<String>();
+    private UrlMap <ModuleService> serviceMap = new UrlMap<ModuleService>();
     private UrlMap <String> templateMap = new UrlMap<String>();
     private Log log = Properties.getLog();
 
@@ -44,7 +44,17 @@ public class AppContre implements AppURLs {
             return;
         }
         if (service!=null && !service.equals("")){
-            serviceMap.put(url,service);
+            try {
+                Class serviceClass = Class.forName(service);
+                Object object = serviceClass.newInstance();
+                ModuleService moduleService = (ModuleService) object;
+                moduleService.init();
+                serviceMap.put(url,moduleService);
+            } catch (IllegalAccessException e) {
+                log.erro("the" + service + " can not be constructed with null " + e.getMessage());
+            } catch (Exception e) {
+                log.erro(appName + url + ":" + e.getMessage());
+            }
         }
         if (template!=null && !template.equals("")){
             templateMap.put(url,template);
@@ -60,13 +70,16 @@ public class AppContre implements AppURLs {
      */
     public void serviceURL(String url, ServletRequest servletRequest, ServletResponse servletResponse){
         if (url==null) {
-            throw new NullPointerException(appName+"url is null.");  //url 不能为空
+            /*未找到网页*/
+            ErrorHandle errorHandle = ErrorFactory.getErrorHandle("404");
+            errorHandle.handle(servletRequest,servletResponse);
+            return;
         }
         if (url.equals("")){
             url = "/";
         }
         /*这里service和template不可为空字符串（""）,因为在url的put操作的时候对其判断筛除*/
-        String service = serviceMap.matches(url);
+        ModuleService service = serviceMap.matches(url);
         String template = templateMap.matches(url);
 
         if (service == null){
@@ -95,33 +108,29 @@ public class AppContre implements AppURLs {
                     }
 
                 }
-                if (resource == null){
+                if (resource != null){
+                    try {
+                        Writer writer = httpServletResponse.getWriter();
+                        writeTemplate(writer,resource);
+                    } catch (IOException e){
+                        log.erro(appName+":HttpServletResponse can not get Writer.");
+                        //这里应该有一个404的处理
+                        ErrorHandle errorHandle = ErrorFactory.getErrorHandle("404");
+                        errorHandle.handle(servletRequest,servletResponse);
+                        return;
+                    }
+                }else{
                     log.erro(appName+":"+template + " is not found.");
+                    //这里应该有一个404的处理
+                    ErrorHandle errorHandle = ErrorFactory.getErrorHandle("404");
+                    errorHandle.handle(servletRequest,servletResponse);
                     return;
-                }
-                try {
-                    Writer writer = httpServletResponse.getWriter();
-                    writeTemplate(writer,resource);
-                } catch (IOException e){
-                    log.erro(appName+":HttpServletResponse can not get Writer.");
                 }
             }
         }
         else {
-            try {
-                Class serviceClass = Class.forName(service);
-                Object object = serviceClass.newInstance();
-                ModuleService moduleService = (ModuleService) object;
-                moduleService.service(servletRequest, servletResponse);
-            } catch (IllegalAccessException e) {
-                log.erro("the" + service + " can not be constructed with null " + e.getMessage());
-                return;
-            } catch (Exception e) {
-                log.erro(appName + url + ":" + e.getMessage());
-                return;
-            }
+            service.service(servletRequest, servletResponse);
         }
-
     }
 
     private void writeTemplate(Writer writer,InputStream inputStream) throws IOException{

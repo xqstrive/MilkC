@@ -20,7 +20,7 @@ public class Error404 implements ErrorHandle{
                     "    <title>Title</title>\n" +
                     "</head>\n" +
                     "<body>\n" +
-                    "<p align=\"center\">找不到网页！</p>\n" +
+                    "<h1 align=\"center\">找不到网页！</h1>\n" +
                     "</body>\n" +
                     "</html>";
 

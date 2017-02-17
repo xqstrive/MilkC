@@ -14,8 +14,8 @@ import java.util.regex.Pattern;
  * Created by Eder on 2017/2/14.
  */
 public class UrlMap <T> {
-    private Map<String,T> appMap = new HashMap<String, T>(Properties.getInitialCapacity(),Properties.getLoadFactor());
-    private List<Pattern> patterns = new ArrayList<Pattern>(Properties.getInitialCapacity());
+    private Map<String,T> appMap = new HashMap(Properties.getInitialCapacity(),Properties.getLoadFactor());
+    private List<Pattern> patterns = new ArrayList(Properties.getInitialCapacity());
 
     public UrlMap(){
 
